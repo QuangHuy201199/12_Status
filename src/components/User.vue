@@ -30,7 +30,7 @@
   </a-table>
 </template>
 <script>
-import { computed, defineComponent, onMounted, reactive, ref, watch } from 'vue';
+import { computed, defineComponent, ref} from 'vue';
 import { CheckOutlined, EditOutlined } from '@ant-design/icons-vue';
 import { getDataUser, addDataUser, updateDataUser, deleteDataUser } from '../Saga/userSaga'
 import { getData } from '../Saga/StatusSaga'
@@ -63,7 +63,7 @@ export default defineComponent({
       dataIndex: 'level',
     }, {
       title: 'Hr_Hold',
-      dataIndex: '',
+      dataIndex: 'Chưa Có',
     }, {
       title: 'Date',
       dataIndex: 'update_At',
@@ -80,25 +80,12 @@ export default defineComponent({
       level:item.level,
       update_At:item.update_At,
     })))
-    const count = computed(() => StatusReducer.listStatus.value.length + 1);
-    const editableData = reactive({});
-
-    const save = key => {
-      Object.assign(statusReducer.listStatus.value.filter(item => key === item.key)[0], editableData[key]);
-      delete editableData[key];
-    };
-
-    const onDelete = key => {
-      statusReducer.listStatus.value = statusReducer.listStatus.value.filter(item => item.key !== key);
-    };
-
+   
     const handleChange = value => {
       console.log(`selected ${value}`);
       id_Status.value = value
     };
-    const focus = () => {
-      console.log('focus');
-    };
+   
 
 
     const name_User = ref("")
@@ -110,15 +97,10 @@ export default defineComponent({
 
     return {
       data,
-      focus,
       handleChange,
       columns,
       UserReducer,
       StatusReducer,
-      onDelete,
-      editableData,
-      count,
-      save,
       name_Status,
       name_User,
       id_Status,

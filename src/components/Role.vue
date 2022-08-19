@@ -23,7 +23,7 @@
     </a-table>
 </template>
 <script>
-import { computed, defineComponent, onMounted, reactive, ref } from 'vue';
+import { computed, defineComponent,  ref } from 'vue';
 import { CheckOutlined, EditOutlined } from '@ant-design/icons-vue';
 import { getDataRole, addDataRole, updateDataRole, deleteDataRole } from '../Saga/RoleSaga'
 import { useStoreRole } from '../reducers/RoleReducer'
@@ -56,17 +56,7 @@ export default defineComponent({
             id_Role: item.id_Role,
             name_Role: item.name_Role
         })))
-        const count = computed(() => RoleReducer.listStatus.value.length + 1);
-        const editableData = reactive({});
-
-        const save = key => {
-            Object.assign(RoleReducer.listStatus.value.filter(item => key === item.key)[0], editableData[key]);
-            delete editableData[key];
-        };
-
-
-
-
+    
         const name_Role = ref("")
         const id_Role = ref("")
 
@@ -74,9 +64,6 @@ export default defineComponent({
             dataRole,
             columns,
             RoleReducer,
-            editableData,
-            count,
-            save,
             name_Role,
             id_Role
         };

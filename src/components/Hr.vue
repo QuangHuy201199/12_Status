@@ -12,7 +12,6 @@
         </a-button>
     </div>
     <p>DANH SÁCH USER ƯU TIÊN
-    <Nav></Nav>
     </p>
     <a-table bordered :data-source="dataUser" :columns="columns">
         <template #bodyCell="{ column, record }">
@@ -24,7 +23,7 @@
     </a-table>
 </template>
 <script>
-import { computed, defineComponent, onMounted, reactive, ref } from 'vue';
+import { computed, defineComponent,  ref } from 'vue';
 import { CheckOutlined, EditOutlined } from '@ant-design/icons-vue';
 import { getDataUserOne, updateDataUserOne } from '../Saga/userOneSaga'
 import { getData } from '../Saga/StatusSaga'
@@ -43,9 +42,9 @@ export default defineComponent({
         useMenu().onSelectedKeys(["hr"])
         const Reducer = useStoreUserOne()
         const StatusReducer = useStore()
-        const log = () => {
-            console.log(level, "hihi");
-        }
+        // const log = () => {
+        //     console.log(level, "hihi");
+        // }
         const columns = [{
             title: 'STT',
             dataIndex: 'key',
@@ -68,17 +67,7 @@ export default defineComponent({
             name_User: item.name_User,
             level: item.level,
         })))
-        const count = computed(() => statusReducer.listStatus.value.length + 1);
-        const editableData = reactive({});
-
-        const save = key => {
-            Object.assign(statusReducer.listStatus.value.filter(item => key === item.key)[0], editableData[key]);
-            delete editableData[key];
-        };
-
-        const onDelete = key => {
-            statusReducer.listStatus.value = statusReducer.listStatus.value.filter(item => item.key !== key);
-        };
+     ;
 
         const name_User = ref("")
         const name_Status = ref("")
@@ -86,21 +75,15 @@ export default defineComponent({
         const id_Status = ref("")
 
         const handleChange = value => {
-            console.log(`selected ${value}`);
             id_Status.value = value
         };
 
         return {
             dataUser,
             handleChange,
-            log,
+            // log,
             columns,
             Reducer,
-            onDelete,
-
-            editableData,
-            count,
-            save,
             name_User,
             name_Status,
             level,

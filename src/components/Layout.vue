@@ -12,33 +12,33 @@
                 <router-link :to="{ name: 'status' }">
                     <a-menu-item key="status">
                         <user-outlined />
-                        <span class="nav-text">Trạng Thái</span>
+                        <span>Trạng Thái</span>
                     </a-menu-item>
                 </router-link>
                 <router-link :to="{ name: 'user' }">
                     <a-menu-item key="user">
                         <video-camera-outlined />
-                        <span class="nav-text">Người Dùng</span>
+                        <span>Người Dùng</span>
                     </a-menu-item>
                 </router-link>
                 <router-link :to="{ name: 'hr' }">
                     <a-menu-item key="hr">
                         <user-outlined />
-                        <span class="nav-text">HR_HOLD</span>
+                        <span>HR_HOLD</span>
                     </a-menu-item>
                 </router-link>
                 <router-link :to="{ name: 'role' }">
                     <a-menu-item key="role">
                         <user-outlined />
-                        <span class="nav-text">ROLE</span>
+                        <span>ROLE</span>
                     </a-menu-item>
                 </router-link>
             </a-menu>
         </a-layout-sider>
         <a-layout>
-            <a-layout-header :style="{ background: '#fff', padding: 0 }" />
-            <a-layout-content :style="{ margin: '24px 16px 0' }">
-                <div :style="{ padding: '24px', background: '#fff', minHeight: '680px' }">
+            <a-layout-header />
+            <a-layout-content>
+                <div>
                     <router-view></router-view>
                 </div>
             </a-layout-content>
@@ -51,7 +51,7 @@
 <script>
 import { UserOutlined, VideoCameraOutlined, UploadOutlined } from '@ant-design/icons-vue';
 import { defineComponent, ref } from 'vue';
-import {useMenu} from '../stores/useMenu'
+import { useMenu } from '../stores/useMenu'
 import { storeToRefs } from "pinia";
 export default defineComponent({
     components: {
@@ -72,7 +72,7 @@ export default defineComponent({
 
         return {
             // selectedKeys: ref(['4']),
-        ...storeToRefs(menuStore),
+            ...storeToRefs(menuStore),
             onCollapse,
             onBreakpoint,
         };
@@ -141,16 +141,19 @@ export default defineComponent({
     color: #fff;
     margin-top: 15px;
 }
-.logo{
+
+.logo {
     display: flex;
     flex-direction: column;
     align-items: center;
     border-bottom: gray solid 1px;
 }
-.nav-text{
+
+.nav-text {
     color: #fff;
 }
-.ant-menu-dark.ant-menu-dark:not(.ant-menu-horizontal) .ant-menu-item-selected{
-        border-radius: 20px 0px 0px 20px ;
+
+.ant-menu-dark.ant-menu-dark:not(.ant-menu-horizontal) .ant-menu-item-selected {
+    border-radius: 20px 0px 0px 20px;
 }
 </style>
