@@ -20,8 +20,9 @@ async function updateDataUserOne(payload) {
     await actions.updateRequest()
     try {
         console.log("before update");
-        await userOneApi.UpdateUserOne({ id_User: payload.id_User }, null, { id_Status: payload.id_Status })
+        const res = await userOneApi.UpdateUserOne({ id_User: payload.id_User }, null, { id_Status: payload.id_Status })
         actions.updateSuccess()
+        alert(res.messenger)
         await getDataUserOne()
     } catch (error) {
          actions.updateFailure(error)

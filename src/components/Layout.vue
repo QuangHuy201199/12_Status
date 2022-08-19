@@ -2,30 +2,33 @@
     <a-layout>
         <a-layout-sider breakpoint="lg" collapsed-width="0" @collapse="onCollapse" @breakpoint="onBreakpoint"
             class="sideBar">
-            <div class="helo" style="color: white, height: 200px">
-                HELLO
+            <div class="logo">
+                <div class="avatar"><img
+                        src="https://tiemanhsky.com/wp-content/uploads/2020/06/PHUS9013-Edita-768x768.jpg"
+                        class="avatar-img" /></div>
+                <h1 class="text-avatar">HẾ LÔ...</h1>
             </div>
-            <a-menu v-model:selectedKeys="selectedKeys" theme="dark" mode="inline">
+            <a-menu v-model:selectedKeys="selectedKeys" v-model:openKeys="openKeys" theme="dark" mode="inline">
                 <router-link :to="{ name: 'status' }">
-                    <a-menu-item key="1">
+                    <a-menu-item key="status">
                         <user-outlined />
                         <span class="nav-text">Trạng Thái</span>
                     </a-menu-item>
                 </router-link>
                 <router-link :to="{ name: 'user' }">
-                    <a-menu-item key="2">
+                    <a-menu-item key="user">
                         <video-camera-outlined />
                         <span class="nav-text">Người Dùng</span>
                     </a-menu-item>
                 </router-link>
                 <router-link :to="{ name: 'hr' }">
-                    <a-menu-item key="3">
+                    <a-menu-item key="hr">
                         <user-outlined />
                         <span class="nav-text">HR_HOLD</span>
                     </a-menu-item>
                 </router-link>
                 <router-link :to="{ name: 'role' }">
-                    <a-menu-item key="4">
+                    <a-menu-item key="role">
                         <user-outlined />
                         <span class="nav-text">ROLE</span>
                     </a-menu-item>
@@ -46,9 +49,10 @@
     </a-layout>
 </template>
 <script>
-import Status from "./Status.vue"
 import { UserOutlined, VideoCameraOutlined, UploadOutlined } from '@ant-design/icons-vue';
 import { defineComponent, ref } from 'vue';
+import {useMenu} from '../stores/useMenu'
+import { storeToRefs } from "pinia";
 export default defineComponent({
     components: {
         UserOutlined,
@@ -57,6 +61,7 @@ export default defineComponent({
     },
 
     setup() {
+        const menuStore = useMenu()
         const onCollapse = (collapsed, type) => {
             console.log(collapsed, type);
         };
@@ -66,7 +71,8 @@ export default defineComponent({
         };
 
         return {
-            selectedKeys: ref(['4']),
+            // selectedKeys: ref(['4']),
+        ...storeToRefs(menuStore),
             onCollapse,
             onBreakpoint,
         };
@@ -115,5 +121,36 @@ export default defineComponent({
 
 .ant-layout.ant-layout-has-sider {
     height: 100vh;
+}
+
+.avatar {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    background: #eee;
+    margin-top: 20px;
+}
+
+.avatar-img {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+}
+
+.text-avatar {
+    color: #fff;
+    margin-top: 15px;
+}
+.logo{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border-bottom: gray solid 1px;
+}
+.nav-text{
+    color: #fff;
+}
+.ant-menu-dark.ant-menu-dark:not(.ant-menu-horizontal) .ant-menu-item-selected{
+        border-radius: 20px 0px 0px 20px ;
 }
 </style>

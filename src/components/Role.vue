@@ -11,7 +11,7 @@
         </a-button>
     </div>
     <p>DANH SÁCH ROLE</p>
-    <a-table bordered :data-source="RoleReducer.listRole" :columns="columns">
+    <a-table bordered :data-source="dataRole" :columns="columns">
         <template #bodyCell="{ column, record }">
             <template v-if="column.dataIndex === 'operation'">
                 <a-button type="primary" @click="handlePut(record)">
@@ -27,6 +27,7 @@ import { computed, defineComponent, onMounted, reactive, ref } from 'vue';
 import { CheckOutlined, EditOutlined } from '@ant-design/icons-vue';
 import { getDataRole, addDataRole, updateDataRole, deleteDataRole } from '../Saga/RoleSaga'
 import { useStoreRole } from '../reducers/RoleReducer'
+import { useMenu } from '../stores/useMenu'
 export default defineComponent({
     components: {
         CheckOutlined,
@@ -35,13 +36,14 @@ export default defineComponent({
 
     setup() {
         getDataRole();
+        useMenu().onSelectedKeys(['role'])
         const RoleReducer = useStoreRole()
         const columns = [{
-            title: 'id_Role',
-            dataIndex: 'id_Role',
+            title: 'STT',
+            dataIndex: 'key',
             width: '30%',
         }, {
-            title: 'name_Role',
+            title: 'Tên Role',
             dataIndex: 'name_Role',
         },
         {
@@ -49,7 +51,11 @@ export default defineComponent({
             dataIndex: 'operation',
         }
         ];
-
+        const dataRole = computed(() => RoleReducer.listRole.map((item, key) => ({
+            key: key + 1,
+            id_Role: item.id_Role,
+            name_Role: item.name_Role
+        })))
         const count = computed(() => RoleReducer.listStatus.value.length + 1);
         const editableData = reactive({});
 
@@ -60,10 +66,12 @@ export default defineComponent({
 
 
 
+
         const name_Role = ref("")
         const id_Role = ref("")
 
         return {
+            dataRole,
             columns,
             RoleReducer,
             editableData,

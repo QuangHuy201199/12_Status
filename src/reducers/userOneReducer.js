@@ -10,7 +10,7 @@ const DEFAULT_STATE = {
 
 export const useStoreUserOne = defineStore({
     id: "userOne",
-   
+    state: () => DEFAULT_STATE,
     actions: {
         getRequest() {
             userType.GET_REQUEST

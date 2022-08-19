@@ -14,7 +14,7 @@
     <p>DANH SÁCH USER ƯU TIÊN
     <Nav></Nav>
     </p>
-    <a-table bordered :data-source="Reducer.listUserOne" :columns="columns">
+    <a-table bordered :data-source="dataUser" :columns="columns">
         <template #bodyCell="{ column, record }">
             <template v-if="column.dataIndex === 'operation'">
                 <a-button type="primary" @click="handlePut(record)">
@@ -30,6 +30,7 @@ import { getDataUserOne, updateDataUserOne } from '../Saga/userOneSaga'
 import { getData } from '../Saga/StatusSaga'
 import { useStoreUserOne } from '../reducers/userOneReducer'
 import { useStore } from '../reducers/statusReducer'
+import { useMenu} from '../stores/useMenu'
 export default defineComponent({
     components: {
         CheckOutlined,
@@ -39,6 +40,7 @@ export default defineComponent({
     setup() {
         getDataUserOne()
         getData()
+        useMenu().onSelectedKeys(["hr"])
         const Reducer = useStoreUserOne()
         const StatusReducer = useStore()
         const log = () => {
@@ -46,20 +48,26 @@ export default defineComponent({
         }
         const columns = [{
             title: 'STT',
-            dataIndex: 'id_User',
+            dataIndex: 'key',
             width: '30%',
         }, {
-            title: 'name_User',
+            title: 'Tên User',
             dataIndex: 'name_User',
         }, {
-            title: 'level',
+            title: 'Level',
             dataIndex: 'level',
         }, {
-            title: 'operation',
+            title: 'Operation',
             dataIndex: 'operation',
         }
         ];
 
+        const dataUser = computed(() => Reducer.listUserOne.map((item, key) => ({
+            key: key + 1,
+            id_User: item.id_User,
+            name_User: item.name_User,
+            level: item.level,
+        })))
         const count = computed(() => statusReducer.listStatus.value.length + 1);
         const editableData = reactive({});
 
@@ -71,26 +79,25 @@ export default defineComponent({
         const onDelete = key => {
             statusReducer.listStatus.value = statusReducer.listStatus.value.filter(item => item.key !== key);
         };
-        // const handleChange = value => {
-        //     console.log(`selected ${value}`);
-        //     id_Status.value = value
-        // };
-        // const focus = () => {
-        //     console.log('focus');
-        // };
+
         const name_User = ref("")
         const name_Status = ref("")
         const level = ref("")
         const id_Status = ref("")
 
+        const handleChange = value => {
+            console.log(`selected ${value}`);
+            id_Status.value = value
+        };
+
         return {
+            dataUser,
+            handleChange,
             log,
             columns,
-            // focus,
-            // handleChange,
             Reducer,
             onDelete,
-            
+
             editableData,
             count,
             save,
@@ -185,7 +192,7 @@ export default defineComponent({
     display: flex;
     flex-direction: row-reverse;
     padding: 10px;
-    margin-right: 114px ;
+    margin-right: 114px;
 }
 
 .buttonAdd {

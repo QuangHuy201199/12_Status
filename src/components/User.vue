@@ -2,11 +2,7 @@
   <div class="inputUser">
     <a-input class="inputNameUser" v-model:value="name_User" placeholder="name_User" />
 
-    <!-- <a-select ref="select" v-model:value="level" style="width: 120px" @change="handleChange">
-      <a-select-option v-for="(item, key) in StatusReducer.listStatus" :key="key" :value="item.level">
-        {{ item.name_Status }}</a-select-option>
-    </a-select> -->
-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaagit
+
       <a-select ref="select" v-model:value="level" style="width: 120px" @change="handleChange">
             <a-select-option v-for="(item, key) in StatusReducer.listStatus" :key="key" :value="item.level">
                 {{ item.name_Status }}</a-select-option>
@@ -22,7 +18,7 @@ aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaagit
     </a-button>
   </div>
   <p>DANH SÁCH USER</p>
-  <a-table bordered :data-source="UserReducer.listUser" :columns="columns">
+  <a-table bordered :data-source="data" :columns="columns">
     <template #bodyCell="{ column, record }">
       <template v-if="column.dataIndex === 'operation'">
         <a-button type="primary" @click="handlePut(record)">
@@ -34,13 +30,13 @@ aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaagit
   </a-table>
 </template>
 <script>
-import { computed, defineComponent, onMounted, reactive, ref } from 'vue';
+import { computed, defineComponent, onMounted, reactive, ref, watch } from 'vue';
 import { CheckOutlined, EditOutlined } from '@ant-design/icons-vue';
 import { getDataUser, addDataUser, updateDataUser, deleteDataUser } from '../Saga/userSaga'
 import { getData } from '../Saga/StatusSaga'
 import { useStore } from '../reducers/statusReducer'
 import { useStoreUser } from '../reducers/userReducer'
-
+import {useMenu} from '../stores/useMenu'
 export default defineComponent({
   components: {
     CheckOutlined,
@@ -53,31 +49,38 @@ export default defineComponent({
 
     const UserReducer = useStoreUser()
     const StatusReducer = useStore()
+    useMenu().onSelectedKeys(['user'])
 
     const columns = [{
       title: 'STT',
-      dataIndex: 'id_User',
+      dataIndex: 'key',
       width: '30%',
     }, {
-      title: 'TÊN USER',
+      title: 'Tên user',
       dataIndex: 'name_User',
     }, {
-      title: 'LEVEL',
+      title: 'Level',
       dataIndex: 'level',
     }, {
-      title: 'HR_HOLD',
+      title: 'Hr_Hold',
       dataIndex: '',
     }, {
-      title: 'DATE',
+      title: 'Date',
       dataIndex: 'update_At',
     },
     {
-      title: 'operation',
+      title: 'Operation',
       dataIndex: 'operation',
     }
     ];
-
-    const count = computed(() => statusReducer.listStatus.value.length + 1);
+    const data = computed(()=> UserReducer.listUser.map((item,key)=>({
+      key : key + 1,
+      id_User:item.id_User,
+      name_User:item.name_User,
+      level:item.level,
+      update_At:item.update_At,
+    })))
+    const count = computed(() => StatusReducer.listStatus.value.length + 1);
     const editableData = reactive({});
 
     const save = key => {
@@ -106,6 +109,7 @@ export default defineComponent({
 
 
     return {
+      data,
       focus,
       handleChange,
       columns,
@@ -131,6 +135,7 @@ export default defineComponent({
       this.id_User = data.id_User;
       this.name_User = data.name_User;
       this.id_Status = data.id_Status;
+      this.level = data.level
     },
     handleUpdate(data) {
       updateDataUser(data)

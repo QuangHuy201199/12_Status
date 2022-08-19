@@ -12,7 +12,7 @@
     </a-button>
   </div>
   <p>DANH SÁCH TRẠNG THÁI</p>
-  <a-table bordered :data-source="statusReducer.listStatus" :columns="columns">
+  <a-table bordered :data-source="dataStatus" :columns="columns">
     <template #bodyCell="{ column, record }">
       <template v-if="column.dataIndex === 'operation'">
         <a-button type="primary" @click="handlePut(record)">
@@ -26,6 +26,7 @@ import { computed, defineComponent, onMounted, reactive, ref } from 'vue';
 import { CheckOutlined, EditOutlined } from '@ant-design/icons-vue';
 import { getData, addData, updateData } from '../Saga/StatusSaga'
 import { useStore } from '../reducers/statusReducer'
+import {useMenu} from '../stores/useMenu'
 export default defineComponent({
   components: {
     CheckOutlined,
@@ -34,47 +35,38 @@ export default defineComponent({
 
   setup() {
     getData();
+    useMenu().onSelectedKeys(['status'])
     const statusReducer = useStore()
     const columns = [{
-      title: 'id_Status',
-      dataIndex: 'id_Status',
+      title: 'STT',
+      dataIndex: 'key',
       width: '30%',
     }, {
-      title: 'name_Status',
+      title: 'Tên Trạng Thái',
       dataIndex: 'name_Status',
     }, {
-      title: 'level',
+      title: 'Level',
       dataIndex: 'level',
     }, {
-      title: 'operation',
+      title: 'Operation',
       dataIndex: 'operation',
     }
     ];
 
-    const count = computed(() => statusReducer.listStatus.value.length + 1);
-    const editableData = reactive({});
-
-    const save = key => {
-      Object.assign(statusReducer.listStatus.value.filter(item => key === item.key)[0], editableData[key]);
-      delete editableData[key];
-    };
-
-    const onDelete = key => {
-      statusReducer.listStatus.value = statusReducer.listStatus.value.filter(item => item.key !== key);
-    };
-
-
+    const dataStatus = computed(()=> statusReducer.listStatus.map((item, key)=>({
+      key: key+ 1,
+      id_Status: item.id_Status,
+      name_Status: item.name_Status,
+      level: item.level,
+    })))
     const name_Status = ref("")
     const level = ref("")
     const id_Status = ref("")
 
     return {
+      dataStatus,
       columns,
       statusReducer,
-      onDelete,
-      editableData,
-      count,
-      save,
       name_Status,
       level,
       id_Status

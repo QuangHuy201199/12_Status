@@ -1,5 +1,4 @@
 import { createRouter, createWebHistory } from "vue-router";
-import HomePage from "../pages/HomePage.vue";
 import ErrorPage from "../pages/ErrorPage.vue"
 import Status from '../components/Status.vue'
 import User from '../components/User.vue'
